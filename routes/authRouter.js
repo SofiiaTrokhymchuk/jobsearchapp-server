@@ -17,6 +17,6 @@ router.post(
   authController.employerRegistration
 );
 router.post("/login", validator.loginValidator, authController.login);
-router.get("/roles", authController.getRoles);
+router.get("/confirm/:confirmationCode", authController.verifyUser);
 
 module.exports = router;

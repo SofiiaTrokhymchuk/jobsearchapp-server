@@ -3,9 +3,7 @@ const router = express.Router();
 const vacancyController = require("../controllers/userVacancyController");
 const validator = require("../utils/validator.js");
 const handleValidationErrors = require("../utils/handleValidationErrors.js");
-/*
-    full path: employer/account -> /vacancies
-*/
+
 router.post(
   "/",
   validator.vacancyValidator,

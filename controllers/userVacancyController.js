@@ -2,7 +2,6 @@ const Category = require("../models/Category.js");
 const Location = require("../models/Location.js");
 const User = require("../models/User.js");
 const Vacancy = require("../models/Vacancy.js");
-//const isValidObjectId = require("../utils/isValidObjectIdUtil.js");
 
 const createVacancy = async (req, res) => {
   try {
@@ -44,11 +43,7 @@ const getAllVacancies = async (req, res) => {
     const vacancies = await Vacancy.find({ employerId: employer._id })
       .populate("category")
       .populate("jobLocation");
-    if (vacancies.length > 0) {
-      res.json({ vacancies });
-    } else {
-      res.json({ message: "Вакансії не знайдено" });
-    }
+    res.json({ vacancies });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Не вдалося переглянути вакансії" });

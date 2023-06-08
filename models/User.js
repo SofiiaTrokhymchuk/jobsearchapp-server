@@ -28,6 +28,15 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["Pending", "Active"],
+      default: "Pending",
+    },
+    confirmationCode: {
+      type: String,
+      unique: true,
+    },
   },
   {
     timestamps: true,

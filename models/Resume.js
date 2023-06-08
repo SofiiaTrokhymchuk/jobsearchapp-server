@@ -25,31 +25,6 @@ const ResumeSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
-    // experience: [
-    //   {
-    //     position: {
-    //       type: String,
-    //       required: true,
-    //     },
-    //     companyName: {
-    //       type: String,
-    //       required: true,
-    //     },
-    //     fromDate: {
-    //       type: Date,
-    //       required: true,
-    //     },
-    //     toDate: {
-    //       type: Date,
-    //       required: true,
-    //     },
-    //   },
-    // ],
-    // viewsCount: {
-    //   type: Number,
-    //   default: 0,
-    // },
   },
   {
     timestamps: true,

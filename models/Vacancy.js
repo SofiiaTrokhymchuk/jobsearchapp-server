@@ -29,22 +29,10 @@ const VacancySchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    // education: {
-    //   type: String,
-    //   required: true,
-    // },
     description: {
       type: String,
       required: true,
     },
-    // viewsCount: {
-    //   type: Number,
-    //   default: 0,
-    // },
-    // responseCount: {
-    //   type: Number,
-    //   default: 0,
-    // },
   },
   {
     timestamps: true,
