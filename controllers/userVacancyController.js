@@ -2,35 +2,16 @@ const Category = require("../models/Category.js");
 const Location = require("../models/Location.js");
 const User = require("../models/User.js");
 const Vacancy = require("../models/Vacancy.js");
+const UserVacancyService = require("../services/userVacancyService.js");
 
 const createVacancy = async (req, res) => {
   try {
-    const {
-      position,
-      category,
-      jobLocation,
-      salary,
-      experience,
-      education,
-      description,
-    } = req.body;
-    console.log(req.user.id);
-    const employer = await User.findById(req.user.id).populate("role");
-    const categoryModel = await Category.findById(category);
-    const locationModel = await Location.findById(jobLocation);
-
-    const vacancy = new Vacancy({
-      employerId: employer._id,
-      position,
-      category: categoryModel._id,
-      jobLocation: locationModel._id,
-      salary,
-      experience,
-      education,
-      description,
-    });
-    await vacancy.save();
-    res.status(201).json({ vacancy });
+    const createVacancyRes = await UserVacancyService.createVacancy(
+      req.body,
+      req.user.id
+    );
+    const { status, vacancy } = createVacancyRes;
+    res.status(status).json({ vacancy });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Не вдалося створити вакансію" });
@@ -39,10 +20,7 @@ const createVacancy = async (req, res) => {
 
 const getAllVacancies = async (req, res) => {
   try {
-    const employer = await User.findById(req.user.id);
-    const vacancies = await Vacancy.find({ employerId: employer._id })
-      .populate("category")
-      .populate("jobLocation");
+    const vacancies = await UserVacancyService.getAllVacancies(req.user.id);
     res.json({ vacancies });
   } catch (e) {
     console.log(e);
@@ -52,13 +30,7 @@ const getAllVacancies = async (req, res) => {
 
 const getOneVacancy = async (req, res) => {
   try {
-    const vacancy = await Vacancy.findById(req.params.id)
-      .populate("employerId")
-      .populate("category")
-      .populate("jobLocation");
-    if (!vacancy) {
-      return res.status(404).json({ message: "Вакансію не знайдено" });
-    }
+    const vacancy = await UserVacancyService.getOneVacancy(req.params.id);
     res.json({ vacancy });
   } catch (e) {
     console.log(e);
@@ -68,36 +40,41 @@ const getOneVacancy = async (req, res) => {
 
 const updateVacancy = async (req, res) => {
   try {
-    const {
-      position,
-      category,
-      jobLocation,
-      salary,
-      experience,
-      education,
-      description,
-    } = req.body;
-    await Vacancy.findByIdAndUpdate(
-      req.params.id,
-      {
-        position,
-        category,
-        jobLocation,
-        salary,
-        experience,
-        education,
-        description,
-      },
-      { new: true }
-    )
-      .populate("employerId")
-      .then((vacancy) => {
-        if (!vacancy) {
-          return res.status(404).json({ message: "Вакансію не знайдено" });
-        } else {
-          return res.json({ vacancy });
-        }
-      });
+    const vacancy = await UserVacancyService.updateVacancy(
+      req.body,
+      req.params.id
+    );
+    // const {
+    //   position,
+    //   category,
+    //   jobLocation,
+    //   salary,
+    //   experience,
+    //   education,
+    //   description,
+    // } = req.body;
+    // await Vacancy.findByIdAndUpdate(
+    //   req.params.id,
+    //   {
+    //     position,
+    //     category,
+    //     jobLocation,
+    //     salary,
+    //     experience,
+    //     education,
+    //     description,
+    //   },
+    //   { new: true }
+    // )
+    //   .populate("employerId")
+    //   .then((vacancy) => {
+    //     if (!vacancy) {
+    //       return res.status(404).json({ message: "Вакансію не знайдено" });
+    //     } else {
+    //       return res.json({ vacancy });
+    //     }
+    //   });
+    return res.json({ vacancy });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Не вдалося переглянути вакансію" });
@@ -106,15 +83,10 @@ const updateVacancy = async (req, res) => {
 
 const deleteVacancy = async (req, res) => {
   try {
-    console.log(req.params.id);
-    await Vacancy.findByIdAndDelete(req.params.id).then((vacancy) => {
-      if (!vacancy) {
-        return res.status(404).json({ message: "Вакансію не знайдено" });
-      } else {
-        console.log(vacancy);
-        return res.json({ message: "Вакансію видалено" });
-      }
-    });
+    const deleteVacancyRes = await UserVacancyService.deleteVacancy(
+      req.params.id
+    );
+    res.json({ message: deleteVacancyRes.message });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Не вдалося видалити вакансію" });

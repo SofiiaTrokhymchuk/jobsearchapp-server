@@ -29,7 +29,6 @@ const deleteUnverifiedUser = async (id) => {
 const login = async (userData) => {
   const { email, password } = userData;
   const user = await User.findOne({ email }).populate("role");
-  console.log(user);
   if (user && user.status !== "Active") {
     return {
       success: false,
